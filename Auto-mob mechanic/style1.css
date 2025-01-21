@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    color: white;
+    position: relative;
+}
+
+header{
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+}
+nav ul li a:hover{
+   color:rgb(208, 11, 11);
+}
+
+.content {
+    top: 40%;
+    text-align: center;
+    padding: 50px;
+    z-index: 2;
+    position: relative;
+}
+
+.content h1 {
+    margin-bottom: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    background: #b70606;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.button:hover{
+    color: #340303;
+}
+
+/* Slideshow Styles */
+.slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    animation: slideAnimation 15s infinite;
+}
+
+.slide:nth-child(1) {
+    background-image: url('home.jpg');
+    animation-delay: 0s;
+}
+
+.slide:nth-child(2) {
+    background-image: url('home1.jpg');
+    animation-delay: 5s;
+}
+
+.slide:nth-child(3) {
+    background-image: url('home2.jpg');
+    animation-delay: 10s;
+}
+
+@keyframes slideAnimation {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    33% { opacity: 1; }
+    53% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+footer{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgb(96, 96, 231);
+    position: fixed;
+    width: 100%;
+    bottom: 2%;
+}

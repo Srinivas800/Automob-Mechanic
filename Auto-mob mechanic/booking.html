@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preventive Maintenance</title>
+    <link rel="stylesheet" href="booking.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class='bx bxs-car-mechanic'></i>
+            <strong>Automob-Mechanic</strong>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="http://127.0.0.1:5500/home.html">Home<i class='bx bx-home'></i></a></li>
+                <li><a href="services.html">Services <i class='bx bx-list-ul'></i></a></li>
+                <li><a href="#">Booking <i class='bx bx-cart-download'></i></a></li>
+                <li><a href="mailto:contact@Automob-Mechanic">contact<i class='bx bx-envelope'></i></a></li>
+                <li><a href="tel:91-8790044578">999-99-99 <i class='bx bx-phone'></i></a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="img">
+        <img src="schedule_appointment.jpg" value="img" alt="img656"
+        height="200px"
+        width="350px">
+
+
+    </div>
+    <h1>BOOK <span>YOUR</span> SERVICE..</h1>
+    <div class="form">
+        <form>
+            <table>
+                <tr>
+                    <td><label for="name"><strong>Name:</strong></label></td>
+                    <td><input id="name" type="text" placeholder="Enter your name" required /></td>
+                </tr>
+                <tr>
+                    <td><label for="email"><strong>Email ID:</strong></label></td>
+                    <td><input id="email" type="email" placeholder="Enter your email ID" /></td>
+                </tr>
+                <tr>
+                    <td><label for="phone"><strong>Phone No:</strong></label></td>
+                    <td>
+                        <select name="Code">
+                            <option value="+91">+91</option>
+                            <option value="+911">+911</option>
+                            <option value="+121">+121</option>
+                        </select>
+                        <input type="tel" id="phone" placeholder="Enter your number">
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="service"><strong>Select Service:</strong></label></td>
+                    <td>
+                       <select class="services">services
+                            <option value="Body repair">Body repair</option>
+                            <option value="Preventive Maintenance">Preventive Maintenance</option>
+                            <option value="Car-Care">Car-Care</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="model"><strong>Car Model:</strong></label></td>
+                    <td><input id="model" type="text" placeholder="Suzuki, Toyota..." /></td>
+                </tr>
+                <tr>
+                    <td><strong>Fuel Type:</strong></td>
+                    <td>
+                        <input type="checkbox" name="fuel" value="petrol">Petrol&nbsp;
+                        <input type="checkbox" name="fuel" value="diesel">Diesel&nbsp;
+                        <input type="checkbox" name="fuel" value="LPG">LPG&nbsp;
+                        <input type="checkbox" name="fuel" value="others">Other&nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="kilometers"><strong>Kilometers Ran:</strong></label></td>
+                    <td><input id="kilometers" type="text" placeholder="...Km" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <button type="Scheduled your Appointment">
+                            <a href="http://127.0.0.1:5500/thankyou.html" type="Scheduled your Appointment">Scheduled your Appointment</a>
+                            
+                            </button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <footer class="footer">
+        <p><strong>Copyright &copy 2025 Automob-Mechanic.All Rights Reserved.</strong></p>
+
+    </footer>
+</body>
+</html>
