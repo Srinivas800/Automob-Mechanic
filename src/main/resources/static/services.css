@@ -1,0 +1,158 @@
+/* =============================================
+   services.css — Services Page
+   ============================================= */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+}
+
+/* ── Header ── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.header nav ul {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+}
+
+.header nav ul li {
+    display: inline-block;
+    margin: 0 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header ul li a {
+    text-decoration: none;
+    color: rgb(5, 5, 61);
+}
+
+.header ul li a:hover { color: red; }
+
+.header .logo {
+    font-size: 28px;
+    color: black;
+    font-weight: bolder;
+}
+
+/* ── Page body pushes below fixed header ── */
+.content {
+    text-align: center;
+    width: 60%;
+    margin: 100px auto 30px auto;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 16px;
+}
+
+.services { color: red; }
+
+/* ── Service Cards ── */
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    padding: 20px 40px;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.item {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    border: 3px solid black;
+    border-radius: 8px;
+    text-align: center;
+    padding: 10px;
+    background: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.item:hover {
+    background-color: rgb(220, 218, 218);
+    color: rgb(76, 13, 13);
+}
+
+/* Remove double-border from button inside item */
+.item button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    width: 100%;
+}
+
+.item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* ── Next Button ── */
+.btn {
+    display: inline-block;
+    margin: 10px 40px 30px 40px;
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn a {
+    color: white;
+    text-decoration: none;
+}
+
+.btn:hover { background-color: rgb(170, 0, 0); }
+
+/* ── Footer — FIXED AT BOTTOM ── */
+.footer {
+    position: fixed;
+    bottom: 0; left: 0;
+    width: 100%;
+    background-color: rgb(96, 96, 231);
+    text-align: center;
+    padding: 10px 0;
+    z-index: 100;
+}
+
+.footer p {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .content { width: 90%; }
+    .flex-container { flex-direction: column; align-items: center; padding: 10px; }
+    .item { max-width: 100%; }
+}

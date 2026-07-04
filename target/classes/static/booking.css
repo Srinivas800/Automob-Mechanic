@@ -1,0 +1,23 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: rgb(104,233,233); min-height: 100vh; display: flex; flex-direction: column; }
+.header { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.9); position: fixed; top: 0; left: 0; width: 100%; padding: 10px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 100; }
+.header nav ul { list-style: none; margin: 0; padding: 0; display: flex; }
+.header nav ul li { margin: 0 15px; font-size: 18px; font-weight: bold; }
+.header ul li a { text-decoration: none; color: rgb(5,5,61); }
+.header ul li a:hover { color: red; }
+.header .logo { font-size: 28px; font-weight: bolder; color: black; }
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 90px 20px 80px; }
+h1 { text-align: center; margin-bottom: 20px; font-size: 28px; }
+h1 span { color: red; text-decoration: underline; }
+.img { text-align: center; margin-bottom: 20px; }
+.img img { border-radius: 10px; max-width: 100%; height: auto; }
+.form { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 580px; }
+.form table { width: 100%; border-collapse: collapse; }
+.form table td { padding: 10px 8px; vertical-align: middle; }
+.form table td:first-child { white-space: nowrap; width: 40%; }
+.form input[type="text"],.form input[type="email"],.form input[type="tel"],.form select { width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+.form select#phone-code { width: auto; margin-right: 6px; }
+button[type="submit"] { border: 3px solid black; color: white; background: red; border-radius: 5px; padding: 10px 24px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+button[type="submit"]:hover { background: rgb(170,0,0); }
+.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: rgb(96,96,231); text-align: center; padding: 10px 0; z-index: 100; }
+.footer p { font-size: 14px; font-weight: bold; color: white; margin: 0; }

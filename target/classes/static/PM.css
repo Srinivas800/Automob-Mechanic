@@ -1,0 +1,31 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; min-height: 100vh; display: flex; flex-direction: column; background: #f9f9f9; }
+.header { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.95); position: fixed; top: 0; left: 0; width: 100%; padding: 10px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 100; }
+.header nav ul { list-style: none; padding: 0; margin: 0; display: flex; }
+.header nav ul li { margin: 0 15px; font-size: 18px; font-weight: bold; }
+.header ul li a { text-decoration: none; color: rgb(5,5,61); }
+.header ul li a:hover { color: red; }
+.header .logo { font-size: 28px; font-weight: bolder; color: black; }
+.cnt { margin-top: 90px; text-align: center; padding: 20px; }
+.cnt img { max-width: 100%; height: auto; border-radius: 10px; }
+.cbv { padding: 20px 40px; }
+.cbv nav { margin-bottom: 10px; font-size: 14px; color: #555; }
+.cbv nav a { text-decoration: none; color: rgb(5,5,61); }
+.cbv nav a:hover { color: red; }
+.cbv h1 { font-size: 28px; margin-bottom: 10px; }
+.cbv span { color: red; font-weight: bold; font-size: 18px; }
+.cbv p { margin-bottom: 8px; font-size: 16px; color: #333; }
+.list { padding: 10px 40px 80px; }
+.list ul { list-style: disc; padding-left: 20px; margin-bottom: 16px; }
+.list li { margin-bottom: 8px; font-size: 16px; color: #333; }
+.list h1 { font-size: 22px; margin-bottom: 16px; }
+.list del { color: gray; }
+.list span { color: red; font-weight: bold; }
+.button { display: inline-block; color: white; border: none; border-radius: 5px; text-decoration: none; padding: 10px 20px; background: red; margin-bottom: 10px; font-size: 15px; cursor: pointer; }
+.button a { color: white; text-decoration: none; }
+.button:hover { background: rgb(170,0,0); }
+.nxt { display: inline-block; color: white; border: none; border-radius: 5px; text-decoration: none; padding: 10px 20px; background: #333; margin-bottom: 10px; font-size: 15px; cursor: pointer; }
+.nxt a { color: white; text-decoration: none; }
+.nxt:hover { background: #111; }
+.footer { position: fixed; bottom: 0; left: 0; width: 100%; background: rgb(96,96,231); text-align: center; padding: 10px 0; z-index: 100; }
+.footer p { font-size: 14px; font-weight: bold; color: white; margin: 0; }

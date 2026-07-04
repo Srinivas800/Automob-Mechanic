@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Service - Automob-Mechanic</title>
+    <link rel="stylesheet" href="booking.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        #loading-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:white; font-size:1.1rem; }
+        #loading-overlay.show { display:flex; }
+        .spinner { width:48px; height:48px; border:5px solid #ffffff44; border-top-color:red; border-radius:50%; animation:spin 0.8s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        #error-msg { display:none; background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5; border-radius:8px; padding:12px 16px; margin:10px 0; font-size:0.9rem; text-align:center; }
+        #error-msg.show { display:block; }
+        .field-error { color:#dc2626; font-size:0.78rem; display:block; margin-top:3px; }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay"><div class="spinner"></div><span>Submitting your booking...</span></div>
+    <header class="header">
+        <div class="logo"><i class='bx bxs-car-mechanic'></i> <strong>Automob-Mechanic</strong></div>
+        <nav><ul>
+            <li><a href="index.html">Home <i class='bx bx-home'></i></a></li>
+            <li><a href="services.html">Services <i class='bx bx-list-ul'></i></a></li>
+            <li><a href="booking.html">Booking <i class='bx bx-cart-download'></i></a></li>
+            <li><a href="mailto:contact@automob-mechanic.com">Email <i class='bx bx-envelope'></i></a></li>
+            <li><a href="tel:+918790044578">Tel No: <i class='bx bx-phone'></i></a></li>
+        </ul></nav>
+    </header>
+    <main>
+        <div class="img"><img src="schedule_appointment.jpg" alt="Schedule Appointment" width="350" height="200"></div>
+        <h1>BOOK <span>YOUR</span> SERVICE</h1>
+        <div id="error-msg"></div>
+        <div class="form">
+            <form id="booking-form" onsubmit="submitBooking(event)">
+                <table>
+                    <tr><td><label for="name"><strong>Name:</strong></label></td>
+                        <td><input id="name" type="text" placeholder="Enter your name" required><span class="field-error" id="err-name"></span></td></tr>
+                    <tr><td><label for="email"><strong>Email ID:</strong></label></td>
+                        <td><input id="email" type="email" placeholder="Enter your email ID" required><span class="field-error" id="err-email"></span></td></tr>
+                    <tr><td><label for="phone"><strong>Phone No:</strong></label></td>
+                        <td><select id="phone-code"><option value="+91">+91</option><option value="+1">+1</option><option value="+44">+44</option></select>
+                            <input type="tel" id="phone" placeholder="Enter your number" required><span class="field-error" id="err-phone"></span></td></tr>
+                    <tr><td><label for="service"><strong>Select Service:</strong></label></td>
+                        <td><select id="service"><option value="Body Repair">Body Repair</option><option value="Preventive Maintenance">Preventive Maintenance</option><option value="Car-Care">Car-Care</option></select></td></tr>
+                    <tr><td><label for="model"><strong>Car Model:</strong></label></td>
+                        <td><input id="model" type="text" placeholder="Suzuki, Toyota..." required><span class="field-error" id="err-carModel"></span></td></tr>
+                    <tr><td><strong>Fuel Type:</strong></td>
+                        <td><input type="checkbox" name="fuel" value="Petrol"> Petrol&nbsp;
+                            <input type="checkbox" name="fuel" value="Diesel"> Diesel&nbsp;
+                            <input type="checkbox" name="fuel" value="LPG"> LPG&nbsp;
+                            <input type="checkbox" name="fuel" value="Other"> Other</td></tr>
+                    <tr><td><label for="kilometers"><strong>Kilometers Ran:</strong></label></td>
+                        <td><input id="kilometers" type="text" placeholder="e.g. 15000 Km" required></td></tr>
+                    <tr><td colspan="2" style="text-align:center;"><button type="submit">Schedule Your Appointment</button></td></tr>
+                </table>
+            </form>
+        </div>
+    </main>
+    <footer class="footer"><p><strong>Copyright &copy; 2025 Automob-Mechanic. All Rights Reserved.</strong></p></footer>
+    <script>
+        async function submitBooking(event) {
+            event.preventDefault(); clearErrors();
+            const fuelChecked = [...document.querySelectorAll('input[name="fuel"]:checked')].map(cb=>cb.value).join(', ');
+            const payload = { name:document.getElementById('name').value.trim(), email:document.getElementById('email').value.trim(), phoneCode:document.getElementById('phone-code').value, phone:document.getElementById('phone').value.trim(), service:document.getElementById('service').value, carModel:document.getElementById('model').value.trim(), fuelType:fuelChecked||'Not specified', kilometersRan:document.getElementById('kilometers').value.trim() };
+            document.getElementById('loading-overlay').classList.add('show');
+            try {
+                const response = await fetch('/api/bookings', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+                const data = await response.json();
+                if (response.ok && data.success) { sessionStorage.setItem('booking', JSON.stringify(data)); window.location.href='thankyou.html'; }
+                else { if(data.errors) Object.entries(data.errors).forEach(([f,m])=>{const el=document.getElementById('err-'+f);if(el)el.textContent=m;}); showError(data.message||'Booking failed. Please try again.'); }
+            } catch(err) { showError('Could not connect to server. Please make sure the backend is running.'); }
+            finally { document.getElementById('loading-overlay').classList.remove('show'); }
+        }
+        function showError(msg) { const el=document.getElementById('error-msg'); el.textContent=msg; el.classList.add('show'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+        function clearErrors() { document.getElementById('error-msg').classList.remove('show'); document.querySelectorAll('.field-error').forEach(el=>el.textContent=''); }
+    </script>
+</body></html>

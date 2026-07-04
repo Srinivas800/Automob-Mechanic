@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Automob-Mechanic</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: #1e293b;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #f97316;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #f97316;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header .logo i { font-size: 1.8rem; }
+        .header .badge {
+            background: #f97316;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* ── Main container ── */
+        .container { padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+        h2 { font-size: 1.6rem; margin-bottom: 20px; color: #f8fafc; }
+
+        /* ── Stats Cards ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        .stat-card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border-top: 4px solid #334155;
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.total  { border-top-color: #3b82f6; }
+        .stat-card.pending { border-top-color: #f59e0b; }
+        .stat-card.confirmed { border-top-color: #10b981; }
+        .stat-card.completed { border-top-color: #6366f1; }
+        .stat-card.cancelled { border-top-color: #ef4444; }
+
+        .stat-card .num {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .stat-card.total .num     { color: #3b82f6; }
+        .stat-card.pending .num   { color: #f59e0b; }
+        .stat-card.confirmed .num { color: #10b981; }
+        .stat-card.completed .num { color: #6366f1; }
+        .stat-card.cancelled .num { color: #ef4444; }
+
+        .stat-card .label {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── Toolbar ── */
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .toolbar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .toolbar input:focus { border-color: #f97316; }
+
+        .toolbar select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .toolbar select:focus { border-color: #f97316; }
+
+        .btn-refresh {
+            padding: 10px 20px;
+            background: #f97316;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .btn-refresh:hover { background: #ea6c00; }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        thead tr { background: #0f172a; }
+        thead th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+        tbody tr {
+            border-top: 1px solid #334155;
+            transition: background 0.15s;
+        }
+        tbody tr:hover { background: #263348; }
+        tbody td { padding: 14px 16px; font-size: 0.88rem; vertical-align: middle; }
+        tbody td .id-badge {
+            background: #334155;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        /* ── Status badge ── */
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .status.PENDING   { background: #78350f; color: #fde68a; }
+        .status.CONFIRMED { background: #064e3b; color: #6ee7b7; }
+        .status.COMPLETED { background: #1e1b4b; color: #a5b4fc; }
+        .status.CANCELLED { background: #450a0a; color: #fca5a5; }
+
+        /* ── Action buttons ── */
+        .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .btn-action {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .btn-action:hover { opacity: 0.8; }
+        .btn-confirm  { background: #10b981; color: white; }
+        .btn-complete { background: #6366f1; color: white; }
+        .btn-cancel   { background: #ef4444; color: white; }
+        .btn-delete   { background: #374151; color: #f87171; }
+
+        /* ── Empty state ── */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        .empty i { font-size: 3rem; margin-bottom: 12px; display: block; }
+
+        /* ── Toast notification ── */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.error { background: #ef4444; }
+
+        /* ── Loading ── */
+        .loading { text-align: center; padding: 40px; color: #64748b; font-size: 1rem; }
+
+        @media (max-width: 600px) {
+            .container { padding: 16px; }
+            .header { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class='bx bxs-car-mechanic'></i>
+            Automob-Mechanic
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="/" style="color:#94a3b8; text-decoration:none; font-size:0.85rem;">
+                <i class='bx bx-home'></i> Main Site
+            </a>
+            <span class="badge">ADMIN PANEL</span>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h2><i class='bx bx-calendar-check'></i> Bookings Dashboard</h2>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="num" id="stat-total">—</div>
+                <div class="label">Total</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="num" id="stat-pending">—</div>
+                <div class="label">Pending</div>
+            </div>
+            <div class="stat-card confirmed">
+                <div class="num" id="stat-confirmed">—</div>
+                <div class="label">Confirmed</div>
+            </div>
+            <div class="stat-card completed">
+                <div class="num" id="stat-completed">—</div>
+                <div class="label">Completed</div>
+            </div>
+            <div class="stat-card cancelled">
+                <div class="num" id="stat-cancelled">—</div>
+                <div class="label">Cancelled</div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <input type="text" id="search-input" placeholder="🔍  Search by name or email..." oninput="onSearch()">
+            <select id="status-filter" onchange="onFilterChange()">
+                <option value="">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+            </select>
+            <button class="btn-refresh" onclick="loadAll()">
+                <i class='bx bx-refresh'></i> Refresh
+            </button>
+        </div>
+
+        <!-- Bookings Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Service</th>
+                        <th>Car</th>
+                        <th>Fuel</th>
+                        <th>KM Ran</th>
+                        <th>Booked At</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookings-tbody">
+                    <tr><td colspan="10" class="loading">Loading bookings...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <script>
+        const API = '/api/bookings';
+        let allBookings = [];
+
+        // ── Load everything on page load ──────────────────────────
+        window.onload = () => {
+            loadStats();
+            loadAll();
+        };
+
+        // ── Load dashboard stats ──────────────────────────────────
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API}/stats`);
+                const data = await res.json();
+                document.getElementById('stat-total').textContent     = data.total;
+                document.getElementById('stat-pending').textContent   = data.pending;
+                document.getElementById('stat-confirmed').textContent = data.confirmed;
+                document.getElementById('stat-completed').textContent = data.completed;
+                document.getElementById('stat-cancelled').textContent = data.cancelled;
+            } catch (e) {
+                console.error('Stats error:', e);
+            }
+        }
+
+        // ── Load all bookings ─────────────────────────────────────
+        async function loadAll() {
+            try {
+                const res = await fetch(API);
+                allBookings = await res.json();
+                renderTable(allBookings);
+                loadStats();
+            } catch (e) {
+                showToast('Failed to load bookings', true);
+            }
+        }
+
+        // ── Search handler ────────────────────────────────────────
+        let searchTimer;
+        function onSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(async () => {
+                const q = document.getElementById('search-input').value.trim();
+                const filter = document.getElementById('status-filter').value;
+
+                if (q.length >= 2) {
+                    const res = await fetch(`${API}/search?q=${encodeURIComponent(q)}`);
+                    let data = await res.json();
+                    if (filter) data = data.filter(b => b.status === filter);
+                    renderTable(data);
+                } else {
+                    onFilterChange();
+                }
+            }, 300);
+        }
+
+        // ── Status filter handler ─────────────────────────────────
+        function onFilterChange() {
+            const filter = document.getElementById('status-filter').value;
+            const q = document.getElementById('search-input').value.trim();
+            let data = [...allBookings];
+            if (filter) data = data.filter(b => b.status === filter);
+            if (q.length >= 2) data = data.filter(b =>
+                b.name.toLowerCase().includes(q.toLowerCase()) ||
+                b.email.toLowerCase().includes(q.toLowerCase())
+            );
+            renderTable(data);
+        }
+
+        // ── Render table rows ─────────────────────────────────────
+        function renderTable(bookings) {
+            const tbody = document.getElementById('bookings-tbody');
+            if (!bookings.length) {
+                tbody.innerHTML = `<tr><td colspan="10" class="empty">
+                    <i class='bx bx-calendar-x'></i>No bookings found</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = bookings.map(b => `
+                <tr>
+                    <td><span class="id-badge">#${b.id}</span></td>
+                    <td>
+                        <strong>${escHtml(b.name)}</strong><br>
+                        <small style="color:#64748b">${escHtml(b.email)}</small>
+                    </td>
+                    <td>${escHtml(b.phoneCode || '')} ${escHtml(b.phone)}</td>
+                    <td>${escHtml(b.service)}</td>
+                    <td>${escHtml(b.carModel)}</td>
+                    <td>${escHtml(b.fuelType || '—')}</td>
+                    <td>${escHtml(b.kilometersRan || '—')}</td>
+                    <td style="white-space:nowrap; font-size:0.8rem; color:#94a3b8">
+                        ${formatDate(b.bookedAt)}
+                    </td>
+                    <td><span class="status ${b.status}">${b.status}</span></td>
+                    <td>
+                        <div class="actions">
+                            ${b.status === 'PENDING' ? `
+                                <button class="btn-action btn-confirm"
+                                    onclick="updateStatus(${b.id}, 'CONFIRMED')">Confirm</button>` : ''}
+                            ${b.status === 'CONFIRMED' ? `
+                                <button class="btn-action btn-complete"
+                                    onclick="updateStatus(${b.id}, 'COMPLETED')">Complete</button>` : ''}
+                            ${b.status !== 'CANCELLED' && b.status !== 'COMPLETED' ? `
+                                <button class="btn-action btn-cancel"
+                                    onclick="updateStatus(${b.id}, 'CANCELLED')">Cancel</button>` : ''}
+                            <button class="btn-action btn-delete"
+                                onclick="deleteBooking(${b.id})">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ── Update booking status ─────────────────────────────────
+        async function updateStatus(id, status) {
+            try {
+                const res = await fetch(`${API}/${id}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Booking #${id} marked as ${status}`);
+                    loadAll();
+                } else {
+                    showToast(data.error || 'Update failed', true);
+                }
+            } catch (e) {
+                showToast('Error updating status', true);
+            }
+        }
+
+        // ── Delete booking ────────────────────────────────────────
+        async function deleteBooking(id) {
+            if (!confirm(`Delete booking #${id}? This cannot be undone.`)) return;
+            try {
+                const res = await fetch(`${API}/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`Booking #${id} deleted`);
+                    loadAll();
+                } else {
+                    showToast(data.error || 'Delete failed', true);
+                }
+            } catch (e) {
+                showToast('Error deleting booking', true);
+            }
+        }
+
+        // ── Helpers ───────────────────────────────────────────────
+        function formatDate(dt) {
+            if (!dt) return '—';
+            const d = new Date(dt);
+            return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })
+                + '<br>' + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+        }
+
+        function escHtml(str) {
+            return String(str || '')
+                .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'show' + (isError ? ' error' : '');
+            setTimeout(() => { t.className = ''; }, 3000);
+        }
+    </script>
+</body>
+</html>
