@@ -3,7 +3,7 @@
 A production-ready full stack web application for an automobile mechanic shop,
 built with Java Spring Boot backend and vanilla HTML/CSS frontend.
 
-🔗 **Live Demo:** https://automob-mechanic-production.up.railway.app
+🔗 **Live Demo:** https://automob-mechanic.onrender.com
 💻 **GitHub:** https://github.com/Srinivas800/Automob-Mechanic
 
 ---
@@ -122,7 +122,7 @@ Final image = JRE + JAR only (no JDK, no Maven, no source code)
 | Security | Spring Security |
 | Frontend | HTML5, CSS3, Vanilla JS |
 | Container | Docker (multi-stage) |
-| Deployment | Railway |
+| Deployment | Render |
 | Build | Maven 3.9 |
 
 ---
@@ -148,7 +148,7 @@ Open: http://localhost:8080
 - ✅ Update booking status (Confirm → Complete / Cancel)
 - ✅ Delete bookings
 - ✅ API response time logged on every request (`X-Response-Time` header)
-- ✅ Deployed on Railway with Docker
+- ✅ Deployed on Render with Docker
 
 ---
 
