@@ -3,7 +3,7 @@
 A production-ready full stack web application for an automobile mechanic shop,
 built with Java Spring Boot backend and vanilla HTML/CSS frontend.
 
-🔗 **Live Demo:** https://automob-mechanic-1.onrender.com
+🔗 **Live Demo:** https://automob-mechanic-1.onrender.com (Up to 90 seconds to load the application)
 💻 **GitHub:** https://github.com/Srinivas800/Automob-Mechanic
 
 ---
