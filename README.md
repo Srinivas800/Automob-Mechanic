@@ -8,21 +8,20 @@ built with Java Spring Boot backend and vanilla HTML/CSS frontend.
 
 ---
 
-## ⚡ Performance Metrics
+## ⚡ Performance (local testing)
+
+Measured with curl on localhost (Java 21, H2 in-memory). Small sample sizes, not a load test.
 
 | Metric | Result |
 |--------|--------|
-| API average response time | < 25ms |
-| POST /api/bookings (create) | ~18ms |
-| GET /api/bookings (list all) | ~12ms |
-| GET /api/bookings/stats | ~8ms |
-| Docker image size (multi-stage) | ~185MB vs ~600MB single-stage |
-| Docker build time (cached deps) | ~35s vs ~3min cold build |
-| Concurrent users supported | 50+ simultaneous users |
-| App startup time | ~3.2 seconds |
+| App startup | ~6.6 seconds |
+| POST /api/bookings | 349ms, 310ms, 8ms (first requests include JVM warm-up) |
+| GET /api/bookings | 82ms, 89ms |
+| GET /api/bookings/stats | 41ms, 57ms |
+| GET /api/bookings/search | 47ms, 28ms |
 
-> Response times measured locally on Java 21 with H2 in-memory database.
-> Latency visible in browser DevTools under response header `X-Response-Time`.
+All requests returned the expected status codes (201 for POST, 200 for GET).
+
 
 ---
 
@@ -126,26 +125,44 @@ Final image = JRE + JAR only (no JDK, no Maven, no source code)
 | Build | Maven 3.9 |
 
 ---
-Problems I debugged
+## 🐞 Problems Debugged
 
-Maven wrapper failed on a Windows path. Its PowerShell download broke on my OneDrive path, so I installed Maven directly and configured PATH.
-Booking form returned a generic 500 error. I rewrote the entity with explicit getters and setters and removed Lombok, and bookings saved correctly.
-Admin buttons failed with “unexpected error”. The cause was Map.of(), which throws on null values. I replaced it with HashMap and a toMap() helper.
-Real errors were hidden. My catch-all exception handler masked the root cause. I made it expose the error while debugging, then scoped the handler to the booking controller.
-/admin returned 404. The route pointed at a folder, not a file. I added redirects, then fixed them again because redirect: strings need a view resolver I didn’t have. I switched to HttpServletResponse.sendRedirect().
-Dates broke the dashboard. LocalDateTime serialized as arrays. I converted dates to ISO strings and configured Jackson.
-H2 console blocked by Spring Security. I added a SecurityFilterChain config to allow the console and frames.
-Frontend layout bugs. The footer moved on several pages, one image used top:900px, and there was invalid nested <button><a><img> markup and a dead href="#". I rebuilt the layouts with fixed footers and clean structure.
-Port 8080 already in use. I found the process with netstat and killed it.
-Git tracked my whole user folder. I had run git init in the wrong directory, so I re-initialized in the project folder and pushed correctly.
-Cloud deployment. I switched H2 from file-based to in-memory, read the port from ${PORT:8080}, and wrote a multi-stage Dockerfile.
+| # | Problem | Root Cause | Fix |
+|---|---------|-----------|-----|
+| 1 | `mvnw.cmd` failed to start | Maven wrapper's PowerShell download script broke on a path containing OneDrive folders | Installed Maven directly and added it to the system PATH |
+| 2 | Booking form returned a generic "unexpected error" | JSON binding to the `Booking` entity failed with Lombok-generated accessors | Removed Lombok and wrote explicit getters and setters |
+| 3 | Admin Confirm/Cancel/Delete buttons failed | `Map.of()` throws `NullPointerException` on null values | Replaced with `HashMap` and a `toMap()` helper that defaults nulls to empty strings |
+| 4 | Real error messages were hidden | Catch-all exception handler returned a generic message | Exposed the real message and stack trace while debugging, then scoped the handler to `BookingController` |
+| 5 | `/admin` returned `NoResourceFoundException` | URL pointed to a folder, not a file | Added a redirect from `/admin` to `/admin/index.html` |
+| 6 | Redirects still failed | `return "redirect:..."` needs a view resolver, which the project doesn't have | Switched to `HttpServletResponse.sendRedirect()` |
+| 7 | Booking dates broke the dashboard | `LocalDateTime` serialized as a numeric array | Returned dates as ISO strings and set `write-dates-as-timestamps=false` |
+| 8 | H2 console blocked | Spring Security's default settings (login and frame restrictions) | Added a `SecurityFilterChain` that permits requests and disables frame options |
+| 9 | Footer moved or overlapped content on several pages | Mixed `relative`/`absolute` positioning and a `top:900px` image offset | Rebuilt layouts with `position: fixed` footers and bottom padding on content |
+| 10 | Invalid frontend markup | Nested `<button><a><img>` and a dead `href="#"` Next button | Simplified the markup and fixed the link |
+| 11 | `Port 8080 already in use` | Previous server process still running | Found it with `netstat -ano` and stopped it with `taskkill` |
+| 12 | Git tracked my whole user folder | `git init` ran in the wrong directory | Re-initialized in the project folder and pushed again |
+| 13 | Cloud deployment setup | Fixed port and file-based database don't suit a container platform | Read the port from `${PORT:8080}`, used in-memory H2, and added a multi-stage Dockerfile |
 
-Known limitations (what I’d build next)
+## ⚠️ Known Limitations
 
-Data is in-memory and resets on restart, so I’d move to PostgreSQL
-The admin dashboard has no login, so I’d add Spring Security with JWT
-No automated tests yet, so I’d add JUnit and Mockito
-Pagination for the admin list
+- **Data is not persistent.** H2 runs in-memory with `create-drop`, so all bookings are lost on every restart or redeploy.
+- **No authentication.** The admin dashboard and all API endpoints are publicly accessible, and `SecurityConfig` permits every request.
+- **No automated tests.** The APIs were checked manually with curl and the browser.
+- **Limited performance testing.** Latency was measured with only a few curl requests on localhost, not under load, and no concurrent-user test was run.
+- **Indexes are unbenchmarked.** Indexes exist on `status`, `email`, and `booked_at`, but no before/after comparison was done. The search query uses `LIKE '%keyword%'` with `LOWER()`, which cannot use the email index.
+- **No pagination.** The admin dashboard loads all bookings at once.
+- **No notifications.** Customers don't receive email or SMS confirmation.
+- **Single instance.** It's one monolithic Spring Boot service, not distributed.
+- **H2 console is enabled.** It should be disabled in production.
+
+## 🚀 Planned Improvements
+
+- Move to PostgreSQL for persistent storage
+- Add admin login with Spring Security and JWT
+- Add unit and integration tests (JUnit, Mockito)
+- Add pagination and a prefix-based search
+- Add email confirmation using Spring Mail
+- Benchmark queries before and after indexing
 ---
 
 ## 🚀 Run Locally
@@ -168,7 +185,6 @@ Open: http://localhost:8080
 - ✅ Filter by status
 - ✅ Update booking status (Confirm → Complete / Cancel)
 - ✅ Delete bookings
-- ✅ API response time logged on every request (`X-Response-Time` header)
 - ✅ Deployed on Render with Docker
 
 ---
@@ -180,7 +196,7 @@ src/main/java/com/automob/mechanic/
 ├── AutomobMechanicApplication.java
 ├── config/
 │   ├── SecurityConfig.java        ← Spring Security
-│   └── PerformanceConfig.java     ← API latency filter
+│   └── PerformanceConfig.java     
 ├── controller/
 │   ├── BookingController.java     ← 7 REST endpoints
 │   ├── WebController.java         ← Page routing
