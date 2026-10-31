@@ -126,6 +126,27 @@ Final image = JRE + JAR only (no JDK, no Maven, no source code)
 | Build | Maven 3.9 |
 
 ---
+Problems I debugged
+
+Maven wrapper failed on a Windows path. Its PowerShell download broke on my OneDrive path, so I installed Maven directly and configured PATH.
+Booking form returned a generic 500 error. I rewrote the entity with explicit getters and setters and removed Lombok, and bookings saved correctly.
+Admin buttons failed with “unexpected error”. The cause was Map.of(), which throws on null values. I replaced it with HashMap and a toMap() helper.
+Real errors were hidden. My catch-all exception handler masked the root cause. I made it expose the error while debugging, then scoped the handler to the booking controller.
+/admin returned 404. The route pointed at a folder, not a file. I added redirects, then fixed them again because redirect: strings need a view resolver I didn’t have. I switched to HttpServletResponse.sendRedirect().
+Dates broke the dashboard. LocalDateTime serialized as arrays. I converted dates to ISO strings and configured Jackson.
+H2 console blocked by Spring Security. I added a SecurityFilterChain config to allow the console and frames.
+Frontend layout bugs. The footer moved on several pages, one image used top:900px, and there was invalid nested <button><a><img> markup and a dead href="#". I rebuilt the layouts with fixed footers and clean structure.
+Port 8080 already in use. I found the process with netstat and killed it.
+Git tracked my whole user folder. I had run git init in the wrong directory, so I re-initialized in the project folder and pushed correctly.
+Cloud deployment. I switched H2 from file-based to in-memory, read the port from ${PORT:8080}, and wrote a multi-stage Dockerfile.
+
+Known limitations (what I’d build next)
+
+Data is in-memory and resets on restart, so I’d move to PostgreSQL
+The admin dashboard has no login, so I’d add Spring Security with JWT
+No automated tests yet, so I’d add JUnit and Mockito
+Pagination for the admin list
+---
 
 ## 🚀 Run Locally
 
